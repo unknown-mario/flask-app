@@ -1,4 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Welcome to DocAi!"
+
+if __name__ == "__main__":
+    app.run()
+    from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
