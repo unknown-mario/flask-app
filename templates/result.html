@@ -3,21 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnosis Report</title>
+    <title>Symptom Report</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #f4f4f4; 
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+        h2 { color: #007bff; }
+        p { font-size: 18px; }
+        a { 
+            display: inline-block; 
+            margin-top: 20px; 
+            text-decoration: none; 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+        }
+        a:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
-    <h1>Health Report</h1>
-
-    {% for symptom, details in report.items() %}
-    <div>
-        <h2>Symptom: {{ symptom.capitalize() }}</h2>
-        <p><strong>Possible Cause:</strong> {{ details['cause'] }}</p>
-        <p><strong>Home Remedies:</strong> {{ details['remedies'] }}</p>
-        <p><strong>When to See a Doctor:</strong> {{ details['doctor'] }}</p>
-        <hr>
+    <div class="container">
+        <h1>Symptom Report</h1>
+        <h2>{{ symptom.capitalize() }}</h2>
+        <p><strong>Possible Cause:</strong> {{ cause }}</p>
+        <p><strong>Home Remedy:</strong> {{ remedy }}</p>
+        <a href="/">Check Another Symptom</a>
     </div>
-    {% endfor %}
-
-    <a href="/">Go back</a>
 </body>
 </html>
