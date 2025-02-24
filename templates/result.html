@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnosis Result</title>
+    <title>Diagnosis Report</title>
 </head>
 <body>
-    <h1>Diagnosis Result</h1>
-    <p>{{ diagnosis }}</p>
+    <h1>Health Report</h1>
+
+    {% for symptom, details in report.items() %}
+    <div>
+        <h2>Symptom: {{ symptom.capitalize() }}</h2>
+        <p><strong>Possible Cause:</strong> {{ details['cause'] }}</p>
+        <p><strong>Home Remedies:</strong> {{ details['remedies'] }}</p>
+        <p><strong>When to See a Doctor:</strong> {{ details['doctor'] }}</p>
+        <hr>
+    </div>
+    {% endfor %}
+
     <a href="/">Go back</a>
 </body>
 </html>
