@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Doctor App</title>
-</head>
-<body>
-    <h1>Welcome to the AI Doctor App!</h1>
-    <p>Describe your symptoms below:</p>
-    <form action="/predict" method="post">
-        <textarea name="symptoms" rows="4" cols="50"></textarea><br>
-        <button type="submit">Check Diagnosis</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Home - Flask App{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Welcome to Health AI</h1>
+    <p>Describe your symptoms and get AI-powered suggestions.</p>
+    <a href="/chatbot" class="btn btn-primary">Try the Chatbot</a>
+</div>
+{% endblock %}
