@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import os
 
 app = Flask(__name__)
 
 # Sample database of symptoms and conditions
-# In a real application, you would want a much more comprehensive database
 conditions_data = {
     'condition': [
         'Common Cold', 
@@ -110,170 +110,6 @@ def analyze():
     }
     
     return jsonify(report)
-
-# Create a simple HTML template for the app
-@app.route('/templates/index.html')
-def get_index_template():
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>AI Symptom Analyzer</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 20px;
-                background-color: #f5f5f5;
-            }
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                background-color: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            h1 {
-                color: #2c3e50;
-                text-align: center;
-            }
-            .input-area {
-                margin-bottom: 20px;
-            }
-            textarea {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                height: 100px;
-                font-size: 16px;
-            }
-            button {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 16px;
-                width: 100%;
-            }
-            .result {
-                margin-top: 20px;
-                border-top: 1px solid #eee;
-                padding-top: 20px;
-            }
-            .condition {
-                margin-bottom: 15px;
-                padding: 15px;
-                border-radius: 5px;
-                background-color: #f9f9f9;
-            }
-            .condition h3 {
-                margin-top: 0;
-                color: #2c3e50;
-            }
-            .disclaimer {
-                font-style: italic;
-                color: #e74c3c;
-                margin-top: 20px;
-                text-align: center;
-            }
-            .loading {
-                text-align: center;
-                display: none;
-            }
-            .severity-mild {
-                border-left: 5px solid #2ecc71;
-            }
-            .severity-moderate {
-                border-left: 5px solid #f39c12;
-            }
-            .severity-severe {
-                border-left: 5px solid #e74c3c;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>AI Symptom Analyzer</h1>
-            <div class="input-area">
-                <p>Describe your symptoms in detail:</p>
-                <textarea id="symptoms" placeholder="Example: fever, cough, headache, fatigue..."></textarea>
-                <button onclick="analyzeSymptoms()">Analyze Symptoms</button>
-            </div>
-            <div class="loading" id="loading">
-                <p>Analyzing symptoms...</p>
-            </div>
-            <div class="result" id="result" style="display:none;">
-                <h2>Analysis Report</h2>
-                <div id="report-content"></div>
-                <p class="disclaimer">This is not a medical diagnosis. Please consult with a healthcare professional for proper evaluation and treatment.</p>
-            </div>
-        </div>
-
-        <script>
-            function analyzeSymptoms() {
-                const symptoms = document.getElementById('symptoms').value;
-                if (!symptoms) {
-                    alert('Please enter your symptoms');
-                    return;
-                }
-                
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('result').style.display = 'none';
-                
-                fetch('/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ symptoms: symptoms }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('result').style.display = 'block';
-                    
-                    let html = `<p><strong>Symptoms analyzed:</strong> ${data.symptoms_entered}</p>`;
-                    
-                    if (data.possible_conditions.length === 0) {
-                        html += '<p>No conditions matched your symptoms. Please provide more details or consult a healthcare professional.</p>';
-                    } else {
-                        html += '<h3>Possible Conditions:</h3>';
-                        
-                        data.possible_conditions.forEach(condition => {
-                            const severityClass = condition.severity.toLowerCase().includes('severe') 
-                                ? 'severity-severe' 
-                                : (condition.severity.toLowerCase().includes('moderate') 
-                                    ? 'severity-moderate' 
-                                    : 'severity-mild');
-                            
-                            html += `
-                                <div class="condition ${severityClass}">
-                                    <h3>${condition.condition}</h3>
-                                    <p><strong>Match confidence:</strong> ${Math.round(condition.similarity * 100)}%</p>
-                                    <p><strong>Severity:</strong> ${condition.severity}</p>
-                                    <p><strong>Recommendation:</strong> ${condition.recommendation}</p>
-                                </div>
-                            `;
-                        });
-                    }
-                    
-                    document.getElementById('report-content').innerHTML = html;
-                })
-                .catch(error => {
-                    document.getElementById('loading').style.display = 'none';
-                    alert('Error analyzing symptoms. Please try again.');
-                    console.error('Error:', error);
-                });
-            }
-        </script>
-    </body>
-    </html>
-    """
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
